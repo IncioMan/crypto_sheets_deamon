@@ -1,10 +1,13 @@
 from apis.coinmarketcap import CoinMarketCap 
 from apis.google_sheets import GoogleSheets
 import os
+from datetime import datetime
 
 coins_to_exclude = ["LIQUIDITA'", "Total"]
 
 sheet = GoogleSheets(os.getenv("SHEET_ID"))
+print("-"*20)
+print(datetime.now())
 print("-"*20)
 #
 print("Retrieving coins from google sheet...")
