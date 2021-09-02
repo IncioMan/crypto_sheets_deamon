@@ -1,10 +1,6 @@
 from __future__ import print_function
 import os.path
-from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google.oauth2 import service_account
+import gspread
 import pandas as pd
 
 # If modifying these scopes, delete the file token.json.
@@ -13,25 +9,27 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 class GoogleSheets:
 
     def __init__(self, sheet_id):
-        creds = None
-        creds = credentials = service_account.Credentials.from_service_account_file("credentials/gs_credentials.json", scopes=SCOPES)
         print("Connecting to Google Sheets APIs..")
-        self.service = build('sheets', 'v4', credentials=creds)
+        self.gc = credentials = gspread.service_account("credentials/gs_credentials.json", scopes=SCOPES)
         self.sheet_id = sheet_id
+        print("Connected to Google Sheets APIs")
 
-    def get_range(self, range):
+    def get_range(self, sheet, column):
         # Call the Sheets API
-        sheet = self.service.spreadsheets()
-        result = sheet.values().get(spreadsheetId=self.sheet_id,
-                                    range=range).execute()
-        values = result.get('values', [])
+        sheet = self.gc.open_by_key(self.sheet_id).worksheet(sheet)
+        values = sheet.col_values(1)
         df = pd.DataFrame(values)
         return df
+
+    def write_to_range(self, sheet, values, range):
+        # Call the Sheets API
+        sheet = self.gc.open_by_key(self.sheet_id).worksheet(sheet)
+        sheet.update(range, values)
         
 
 def main():
     sheet = GoogleSheets("1cr49gsJkoScgMo9o792cjoOb_gBJqJwSebX3HWFUnKA")
-    df = sheet.get_range("Crypto!A2:A")
+    df = sheet.write_to_range("test", [["ciao"],["bello"]], "C6:A2")
 
 if __name__ == '__main__':
     main()
