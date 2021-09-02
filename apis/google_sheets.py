@@ -14,7 +14,7 @@ class GoogleSheets:
 
     def __init__(self, sheet_id):
         creds = None
-        creds = credentials = service_account.Credentials.from_service_account_file("../credentials/gs_credentials.json", scopes=SCOPES)
+        creds = credentials = service_account.Credentials.from_service_account_file("credentials/gs_credentials.json", scopes=SCOPES)
         print("Connecting to Google Sheets APIs..")
         self.service = build('sheets', 'v4', credentials=creds)
         self.sheet_id = sheet_id
