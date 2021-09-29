@@ -27,5 +27,5 @@ values = []
 for coin in coins.coin:
     values.append([df.at[coin]])
 print("Writing prices to Google Sheet...")
-sheet.write_to_range("Crypto", values, "C6:C")
+sheet.write_to_range("Crypto", values, "C2:C")
 print("Wrote prices to Google Sheet")
