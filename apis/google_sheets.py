@@ -17,7 +17,22 @@ class GoogleSheets:
     def get_range(self, sheet, column):
         # Call the Sheets API
         sheet = self.gc.open_by_key(self.sheet_id).worksheet(sheet)
-        values = sheet.col_values(1)
+        values = sheet.col_values(column)
+        df = pd.DataFrame(values)
+        return df
+
+    def get_ranges(self, sheet, columns):
+        # Call the Sheets API
+        sheet = self.gc.open_by_key(self.sheet_id).worksheet(sheet)
+        values = {}
+        max_length = 0
+        for col in columns:
+            values[col] = sheet.col_values(col)
+            max_length = max(max_length, len(values[col]))
+        #uniform lengths of columns
+        for col in columns:
+            values[col] = values[col] + ['']*(max_length-len(values[col]))
+        
         df = pd.DataFrame(values)
         return df
 
