@@ -10,8 +10,12 @@ class CoinMarketCap:
     self.url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
 
   def get_prices(self, symbols, currency):
+    if 'USD' in symbols:
+        mapped_symbols = ['USDT' if s == 'USD' else s for s in symbols]
+    else:
+        mapped_symbols = symbols
     parameters = {
-      'symbol':",".join(symbols),
+      'symbol':",".join(mapped_symbols),
       'convert': currency
     }
     headers = {
@@ -28,6 +32,8 @@ class CoinMarketCap:
       for coin, values in data["data"].items():
           prices[coin] = values["quote"][currency]["price"]
       s = pd.Series(prices)
+      if 'USD' in symbols:
+        s['USD'] = s['USDT']
       return s
     except (ConnectionError, Timeout, TooManyRedirects) as e:
       print(e)
