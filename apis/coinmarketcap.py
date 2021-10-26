@@ -34,6 +34,8 @@ class CoinMarketCap:
       s = pd.Series(prices)
       if 'USD' in symbols:
         s['USD'] = s['USDT']
+      if 'PSI' in symbols:
+        s['PSI'] = 0.2
       return s
     except (ConnectionError, Timeout, TooManyRedirects) as e:
       print(e)
