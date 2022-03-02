@@ -42,7 +42,8 @@ def update_current_prices():
     #
     print("Retrieving prices from CoinMarketCap...")
     cmc = CoinMarketCap()
-    df = cmc.get_prices(coins.coin.tolist(), "EUR")
+    coins_list = coins.coin.tolist()
+    df = cmc.get_prices(coins_list, "EUR", fixed_prices={'KYVE':0})
     print("Retrieved prices from CoinMarketCap")
     print("-"*10)
     values = []
@@ -58,9 +59,6 @@ def main():
     print("-"*20)
     update_current_prices()
     print("-"*20)
-    print("Updating tx prices")
-    print("-"*20)
-    update_tx_price()
 
 if __name__ == '__main__':
     main()
